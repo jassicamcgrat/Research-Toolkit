@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Toolkit: Sample Size, Margin of Error &amp; Market Sizing Calculators</title>
+<meta name="description" content="Four free calculators for market researchers: survey sample size, margin of error, TAM/SAM/SOM market sizing, and A/B significance testing. Formulas shown, no sign-up.">
+<link rel="canonical" href="https://USERNAME.github.io/">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Research Toolkit: Sample Size, Margin of Error & Market Sizing Calculators">
+<meta property="og:description" content="Four free calculators for market researchers. Formulas shown, no sign-up.">
+<meta property="og:url" content="https://USERNAME.github.io/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#17212B;
+  --ink-2:#4B5763;
+  --paper:#E9EBE4;
+  --surface:#F5F6F1;
+  --rule:#C6CABB;
+  --pine:#14655B;
+  --ochre:#B8830F;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(198,202,187,.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(198,202,187,.45) 1px, transparent 1px);
+  background-size:28px 28px;
+  font-variant-numeric:tabular-nums;
+}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--rule);
+  background:rgba(233,235,228,.9);
+  backdrop-filter:blur(6px);
+  position:sticky;top:0;z-index:20;
+}
+.masthead .wrap{display:flex;align-items:baseline;gap:16px;padding-top:14px;padding-bottom:14px;flex-wrap:wrap}
+.mark{font-family:'Instrument Serif',Georgia,serif;font-size:22px;letter-spacing:.01em;text-decoration:none;color:var(--ink)}
+.mark i{font-style:italic}
+.masthead nav{margin-left:auto;display:flex;gap:18px;font-size:14px}
+.masthead nav a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.masthead nav a:hover,.masthead nav a:focus-visible{color:var(--pine);border-bottom-color:var(--pine)}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 40px}
+.hero h1{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-weight:400;
+  font-size:clamp(38px,6.4vw,68px);
+  line-height:1.04;
+  letter-spacing:-.015em;
+  margin:0 0 20px;
+  max-width:16ch;
+}
+.hero p{max-width:60ch;color:var(--ink-2);font-size:17px;margin:0 0 28px}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:16px;max-width:60ch}
+.hero-meta b{display:block;font-weight:600;color:var(--ink);font-size:15px}
+
+/* ---------- instrument panel ---------- */
+.panel{
+  border:1px solid var(--ink);
+  background:var(--surface);
+  margin-bottom:72px;
+}
+.picker{display:flex;border-bottom:1px solid var(--ink);overflow-x:auto;scrollbar-width:thin}
+.picker button{
+  flex:1 0 auto;
+  font:inherit;font-size:14px;font-weight:500;
+  padding:15px 20px;
+  background:transparent;border:0;border-right:1px solid var(--rule);
+  color:var(--ink-2);cursor:pointer;white-space:nowrap;text-align:left;
+}
+.picker button:last-child{border-right:0}
+.picker button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.picker button:hover:not([aria-selected="true"]){background:rgba(20,101,91,.07);color:var(--pine)}
+
+.bench{display:grid;grid-template-columns:minmax(0,310px) minmax(0,1fr)}
+.controls{padding:28px 26px;border-right:1px solid var(--rule)}
+.readout{padding:28px 26px;display:flex;flex-direction:column;gap:22px}
+
+.field{margin-bottom:22px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13.5px;font-weight:500;margin-bottom:7px}
+.field .hint{display:block;font-size:12.5px;color:var(--ink-2);font-weight:400;margin-top:3px;line-height:1.45}
+.field input[type=number],.field select{
+  width:100%;font:inherit;font-size:15px;
+  padding:9px 11px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:0;
+  font-variant-numeric:tabular-nums;
+}
+.field input[type=number]:focus,.field select:focus{outline:2px solid var(--pine);outline-offset:-1px;border-color:var(--pine)}
+
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;accent-color:var(--pine);height:20px}
+.slider-val{font-weight:600;font-size:15px;min-width:62px;text-align:right}
+
+/* big number */
+.figure{border-bottom:1px solid var(--rule);padding-bottom:20px}
+.figure .n{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:clamp(50px,9vw,82px);line-height:.95;letter-spacing:-.02em;display:block;
+}
+.figure .cap{font-size:14px;color:var(--ink-2);margin-top:10px;max-width:46ch;line-height:1.5}
+.figure.neg .n{color:var(--ochre)}
+.figure.pos .n{color:var(--pine)}
+
+.viz{width:100%;height:auto;display:block}
+.viz text{font-family:'Inter',sans-serif;font-size:11.5px;fill:var(--ink-2)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.grid2 div{background:var(--surface);padding:13px 15px}
+.grid2 span{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:2px}
+.grid2 strong{font-size:19px;font-weight:600}
+
+.formula{
+  font-size:13px;color:var(--ink-2);line-height:1.7;
+  border-left:2px solid var(--pine);padding-left:14px;
+}
+.formula code{font-size:13px;background:rgba(20,101,91,.08);padding:1px 5px;color:var(--pine)}
+
+/* ---------- prose sections ---------- */
+section h2{
+  font-family:'Instrument Serif',Georgia,serif;font-weight:400;
+  font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0 0 18px;letter-spacing:-.01em;
+}
+section h3{font-size:17px;font-weight:600;margin:28px 0 7px}
+section p{max-width:66ch;color:var(--ink-2);margin:0 0 14px}
+section a{color:var(--pine)}
+.notes{padding-bottom:64px}
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:36px;margin-top:8px}
+.notes-grid p{margin:0}
+
+/* ---------- colophon ---------- */
+.colophon{border-top:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:56px 0 40px;margin-top:24px}
+.colophon h2{color:var(--paper)}
+.colophon p{color:#B6BFC7;max-width:62ch}
+.colophon a{color:#fff;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.colophon a:hover{color:var(--ochre)}
+.colophon .fine{font-size:13px;color:#8C97A1;margin-top:34px;border-top:1px solid #2E3D4A;padding-top:18px;max-width:none}
+
+:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.colophon :focus-visible{outline-color:var(--ochre)}
+
+@media (max-width:820px){
+  .bench{grid-template-columns:1fr}
+  .controls{border-right:0;border-bottom:1px solid var(--rule)}
+  .picker button{flex:0 0 auto;padding:13px 16px}
+  .hero{padding:44px 0 32px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="mark" href="#top">Research <i>Toolkit</i></a>
+    <nav>
+      <a href="#panel">Calculators</a>
+      <a href="#notes">Method notes</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<div class="wrap hero">
+  <h1>Four numbers every study should settle before fieldwork starts.</h1>
+  <p>How many respondents you need, how wide your error bars really are, how big the market underneath actually is, and whether the difference you found is a finding or noise. Adjust the inputs, watch the answer move.</p>
+  <div class="hero-meta">
+    <div><b>No sign-up</b>Nothing is sent anywhere</div>
+    <div><b>Formulas shown</b>Check the maths yourself</div>
+    <div><b>Open source</b>Fork it, change it</div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="panel" id="panel">
+
+  <div class="picker" role="tablist" aria-label="Choose a calculator">
+    <button role="tab" id="tab-size" aria-controls="p-size" aria-selected="true">Sample size</button>
+    <button role="tab" id="tab-moe" aria-controls="p-moe" aria-selected="false">Margin of error</button>
+    <button role="tab" id="tab-market" aria-controls="p-market" aria-selected="false">Market sizing</button>
+    <button role="tab" id="tab-sig" aria-controls="p-sig" aria-selected="false">Significance test</button>
+  </div>
+
+  <!-- ============ SAMPLE SIZE ============ -->
+  <div class="bench" id="p-size" role="tabpanel" aria-labelledby="tab-size">
+    <div class="controls">
+      <div class="field">
+        <label for="s-pop">Population size</label>
+        <input type="number" id="s-pop" value="250000" min="1" step="1">
+        <span class="hint">Everyone who could qualify for the study. Guess high if you are unsure.</span>
+      </div>
+      <div class="field">
+        <label for="s-conf">Confidence level</label>
+        <div class="slider-row">
+          <input type="range" id="s-conf" min="80" max="99" step="1" value="95">
+          <span class="slider-val" id="s-conf-v">95%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="s-moe">Margin of error you will accept</label>
+        <div class="slider-row">
+          <input type="range" id="s-moe" min="1" max="15" step="0.5" value="5">
+          <span class="slider-val" id="s-moe-v">±5.0%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="s-p">Expected response split</label>
+        <div class="slider-row">
+          <input type="range" id="s-p" min="10" max="90" step="5" value="50">
+          <span class="slider-val" id="s-p-v">50%</span>
+        </div>
+        <span class="hint">Leave at 50% unless you have prior data. 50% is the worst case and needs the largest sample.</span>
+      </div>
+      <div class="field">
+        <label for="s-resp">Expected response rate</label>
+        <div class="slider-row">
+          <input type="range" id="s-resp" min="2" max="100" step="1" value="25">
+          <span class="slider-val" id="s-resp-v">25%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="figure"><span class="n" id="s-out">384</span>
+        <span class="cap" id="s-cap">completed responses needed.</span></div>
+      <div class="grid2">
+        <div><span>Invitations to send</span><strong id="s-invites">1,536</strong></div>
+        <div><span>z-score used</span><strong id="s-z">1.960</strong></div>
+      </div>
+      <svg class="viz" id="s-viz" viewBox="0 0 560 190" role="img" aria-label="Normal distribution with the confidence interval shaded"></svg>
+      <div class="formula">
+        Cochran's formula with finite population correction:<br>
+        <code>n₀ = z² · p(1−p) / e²</code> then <code>n = n₀ / (1 + (n₀−1)/N)</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MARGIN OF ERROR ============ -->
+  <div class="bench" id="p-moe" role="tabpanel" aria-labelledby="tab-moe" hidden>
+    <div class="controls">
+      <div class="field">
+        <label for="m-n">Completed responses</label>
+        <input type="number" id="m-n" value="400" min="2" step="1">
+      </div>
+      <div class="field">
+        <label for="m-pop">Population size</label>
+        <input type="number" id="m-pop" value="250000" min="1" step="1">
+      </div>
+      <div class="field">
+        <label for="m-conf">Confidence level</label>
+        <div class="slider-row">
+          <input type="range" id="m-conf" min="80" max="99" step="1" value="95">
+          <span class="slider-val" id="m-conf-v">95%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="m-res">Result you want to report</label>
+        <div class="slider-row">
+          <input type="range" id="m-res" min="1" max="99" step="1" value="62">
+          <span class="slider-val" id="m-res-v">62%</span>
+        </div>
+        <span class="hint">For example, 62% of your sample said they would switch provider.</span>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="figure"><span class="n" id="m-out">±4.8%</span>
+        <span class="cap" id="m-cap"></span></div>
+      <div class="grid2">
+        <div><span>Lower bound</span><strong id="m-lo">57.2%</strong></div>
+        <div><span>Upper bound</span><strong id="m-hi">66.8%</strong></div>
+      </div>
+      <svg class="viz" id="m-viz" viewBox="0 0 560 190" role="img" aria-label="Confidence interval around the reported result"></svg>
+      <div class="formula">
+        <code>e = z · √( p(1−p) / n )</code> multiplied by the correction <code>√((N−n)/(N−1))</code> when your sample is a large slice of the population.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MARKET SIZING ============ -->
+  <div class="bench" id="p-market" role="tabpanel" aria-labelledby="tab-market" hidden>
+    <div class="controls">
+      <div class="field">
+        <label for="k-units">Total possible buyers</label>
+        <input type="number" id="k-units" value="180000" min="1" step="1">
+        <span class="hint">Companies or people in the whole category, worldwide or in your region.</span>
+      </div>
+      <div class="field">
+        <label for="k-arpu">Annual revenue per buyer</label>
+        <input type="number" id="k-arpu" value="2400" min="0" step="10">
+      </div>
+      <div class="field">
+        <label for="k-cur">Currency</label>
+        <select id="k-cur">
+          <option value="$">USD $</option>
+          <option value="£">GBP £</option>
+          <option value="€">EUR €</option>
+          <option value="₨">PKR ₨</option>
+          <option value="₹">INR ₹</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="k-sam">Share you can actually serve</label>
+        <div class="slider-row">
+          <input type="range" id="k-sam" min="1" max="100" step="1" value="18">
+          <span class="slider-val" id="k-sam-v">18%</span>
+        </div>
+        <span class="hint">Filtered by geography, language, pricing tier, regulation, anything that rules buyers out today.</span>
+      </div>
+      <div class="field">
+        <label for="k-som">Share you can win in 3 years</label>
+        <div class="slider-row">
+          <input type="range" id="k-som" min="0.5" max="60" step="0.5" value="6">
+          <span class="slider-val" id="k-som-v">6.0%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="figure"><span class="n" id="k-out">$77.8M</span>
+        <span class="cap">reachable revenue in three years, if the share assumptions hold.</span></div>
+      <svg class="viz" id="k-viz" viewBox="0 0 560 210" role="img" aria-label="TAM, SAM and SOM shown in proportion"></svg>
+      <div class="grid2">
+        <div><span>Buyers you would need to win</span><strong id="k-buyers">1,944</strong></div>
+        <div><span>New buyers per month</span><strong id="k-month">54</strong></div>
+      </div>
+      <div class="formula">
+        <code>TAM = buyers × revenue per buyer</code>, <code>SAM = TAM × serviceable share</code>, <code>SOM = SAM × winnable share</code>. The third number is the only one an investor will argue with, so keep the evidence for it close by.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SIGNIFICANCE ============ -->
+  <div class="bench" id="p-sig" role="tabpanel" aria-labelledby="tab-sig" hidden>
+    <div class="controls">
+      <div class="field">
+        <label for="g-n1">Group A size</label>
+        <input type="number" id="g-n1" value="480" min="1" step="1">
+      </div>
+      <div class="field">
+        <label for="g-x1">Group A positive responses</label>
+        <input type="number" id="g-x1" value="192" min="0" step="1">
+      </div>
+      <div class="field">
+        <label for="g-n2">Group B size</label>
+        <input type="number" id="g-n2" value="495" min="1" step="1">
+      </div>
+      <div class="field">
+        <label for="g-x2">Group B positive responses</label>
+        <input type="number" id="g-x2" value="228" min="0" step="1">
+      </div>
+      <div class="field">
+        <label for="g-conf">Confidence level</label>
+        <div class="slider-row">
+          <input type="range" id="g-conf" min="80" max="99" step="1" value="95">
+          <span class="slider-val" id="g-conf-v">95%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="figure" id="g-fig"><span class="n" id="g-out">p = 0.031</span>
+        <span class="cap" id="g-cap"></span></div>
+      <svg class="viz" id="g-viz" viewBox="0 0 560 175" role="img" aria-label="Both group results with confidence intervals"></svg>
+      <div class="grid2">
+        <div><span>Difference</span><strong id="g-diff">+6.1 pts</strong></div>
+        <div><span>z-statistic</span><strong id="g-z">2.16</strong></div>
+      </div>
+      <div class="formula">
+        Two-proportion z-test. Pooled rate <code>p̂ = (x₁+x₂)/(n₁+n₂)</code>, then <code>z = (p₁−p₂) / √(p̂(1−p̂)(1/n₁+1/n₂))</code>. A low p-value means the gap is unlikely to be chance alone. It does not mean the gap matters commercially.
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="wrap notes" id="notes">
+  <h2>What these numbers can and cannot tell you</h2>
+  <p>Every calculator here assumes something that is rarely true in the field: that your respondents are a random draw from the population you care about. They almost never are. Panel respondents are people who sign up for panels. Customer list surveys reach people who still open your email.</p>
+  <div class="notes-grid">
+    <div>
+      <h3>Sampling error is the small problem</h3>
+      <p>The margin of error only measures the luck of the draw. It says nothing about a leading question, a broken screener, or a panel that skews young. Those biases do not shrink when you add respondents.</p>
+    </div>
+    <div>
+      <h3>Subgroups eat your sample</h3>
+      <p>A study of 400 sounds comfortable until you split it six ways and report on a cell of 38. Decide your reporting cuts before fieldwork, then size for the smallest cell you plan to quote.</p>
+    </div>
+    <div>
+      <h3>Top-down sizing drifts</h3>
+      <p>Multiplying a big population by a plausible-looking percentage produces a confident number with no evidence in it. Build the figure bottom-up from real pipeline where you can, and use the top-down number only as a sanity check.</p>
+    </div>
+    <div>
+      <h3>Significance is not importance</h3>
+      <p>With 20,000 respondents, a one-point gap becomes statistically significant. Ask what size of difference would change your decision, and check whether you found one that large.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="colophon" id="about">
+  <div class="wrap">
+    <h2>Built by a research team, not a calculator company</h2>
+    <p>These tools come out of day-to-day work at <a href="https://theinsightsdesk.com/" rel="noopener">The Insights Desk</a>, a market research and consulting firm that runs expert interviews, B2B surveys and competitive studies for clients who need the numbers to hold up in a board meeting.</p>
+    <p>If a study is bigger than a calculator can settle, we design and field it. See <a href="https://theinsightsdesk.com/">theinsightsdesk.com</a> for the services and past work.</p>
+    <p class="fine">Open source and free to use. Nothing you type is transmitted or stored, every calculation runs in your own browser. Formulas follow Cochran (1977) for sample size and the standard two-proportion z-test for significance.</p>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Research Toolkit",
+  "url":"https://USERNAME.github.io/",
+  "applicationCategory":"BusinessApplication",
+  "operatingSystem":"Any",
+  "description":"Free calculators for survey sample size, margin of error, TAM/SAM/SOM market sizing and A/B significance testing.",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+  "publisher":{
+    "@type":"Organization",
+    "name":"The Insights Desk",
+    "url":"https://theinsightsdesk.com/"
+  }
+}
+</script>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- statistics ---------- */
+function erf(x){
+  var s = x < 0 ? -1 : 1; x = Math.abs(x);
+  var a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  var t=1/(1+p*x);
+  var y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return s*y;
+}
+function normCdf(z){ return 0.5*(1+erf(z/Math.SQRT2)); }
+
+function normInv(p){
+  var a=[-3.969683028665376e1,2.209460984245205e2,-2.759285104469687e2,1.383577518672690e2,-3.066479806614716e1,2.506628277459239],
+      b=[-5.447609879822406e1,1.615858368580409e2,-1.556989798598866e2,6.680131188771972e1,-1.328068155288572e1],
+      c=[-7.784894002430293e-3,-3.223964580411365e-1,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],
+      d=[7.784695709041462e-3,3.224671290700398e-1,2.445134137142996,3.754408661907416],
+      lo=0.02425, q, r;
+  if(p<lo){ q=Math.sqrt(-2*Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if(p>1-lo){ q=Math.sqrt(-2*Math.log(1-p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q;
+  return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+}
+function zFor(confPct){ return normInv(1-(1-confPct/100)/2); }
+
+/* ---------- helpers ---------- */
+var $ = function(id){ return document.getElementById(id); };
+var commas = function(n){ return Math.round(n).toLocaleString('en-US'); };
+function money(v,cur){
+  var a=Math.abs(v), s;
+  if(a>=1e9) s=(v/1e9).toFixed(1)+'B';
+  else if(a>=1e6) s=(v/1e6).toFixed(1)+'M';
+  else if(a>=1e3) s=(v/1e3).toFixed(1)+'K';
+  else s=Math.round(v).toString();
+  return cur+s;
+}
+function num(el,fallback){
+  var v=parseFloat(el.value);
+  return (isNaN(v)||!isFinite(v)) ? fallback : v;
+}
+function svg(tag,attrs){
+  var e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(var k in attrs) e.setAttribute(k,attrs[k]);
+  return e;
+}
+function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+function txt(x,y,s,anchor,weight,fill){
+  var t=svg('text',{x:x,y:y,'text-anchor':anchor||'middle'});
+  if(weight) t.setAttribute('font-weight',weight);
+  if(fill) t.setAttribute('fill',fill);
+  t.textContent=s; return t;
+}
+
+/* ---------- bell curve, shared by two panels ---------- */
+function drawCurve(el, z, label){
+  clear(el);
+  var W=560,H=190, base=H-30, top=18, span=3.6;
+  var X=function(zz){ return (zz+span)/(2*span)*W; };
+  var Y=function(zz){ return base-Math.exp(-zz*zz/2)*(base-top); };
+
+  // shaded confidence band
+  var zz=Math.min(z,span), area='M'+X(-zz)+','+base;
+  for(var i=0;i<=120;i++){ var v=-zz+2*zz*i/120; area+='L'+X(v).toFixed(1)+','+Y(v).toFixed(1); }
+  area+='L'+X(zz)+','+base+'Z';
+  el.appendChild(svg('path',{d:area,fill:'#14655B','fill-opacity':'0.16'}));
+
+  // curve outline
+  var line='';
+  for(var j=0;j<=200;j++){ var u=-span+2*span*j/200; line+=(j?'L':'M')+X(u).toFixed(1)+','+Y(u).toFixed(1); }
+  el.appendChild(svg('path',{d:line,fill:'none',stroke:'#14655B','stroke-width':'1.6'}));
+
+  // baseline + edges
+  el.appendChild(svg('line',{x1:0,y1:base,x2:W,y2:base,stroke:'#C6CABB','stroke-width':'1'}));
+  [-zz,zz].forEach(function(e){
+    el.appendChild(svg('line',{x1:X(e),y1:Y(e),x2:X(e),y2:base,stroke:'#14655B','stroke-width':'1.4','stroke-dasharray':'3 3'}));
+  });
+  el.appendChild(svg('line',{x1:X(0),y1:top-2,x2:X(0),y2:base,stroke:'#17212B','stroke-width':'1'}));
+
+  el.appendChild(txt(X(0),base+17,label||'your result','middle','600','#17212B'));
+  el.appendChild(txt(X(-zz),base+17,'−'+zz.toFixed(2)+'σ','middle'));
+  el.appendChild(txt(X(zz),base+17,'+'+zz.toFixed(2)+'σ','middle'));
+}
+
+/* ===================== 1. SAMPLE SIZE ===================== */
+var S={pop:$('s-pop'),conf:$('s-conf'),moe:$('s-moe'),p:$('s-p'),resp:$('s-resp')};
+function calcSize(){
+  var N=Math.max(1,num(S.pop,250000)),
+      conf=num(S.conf,95), e=num(S.moe,5)/100,
+      p=num(S.p,50)/100, rr=Math.max(0.01,num(S.resp,25)/100),
+      z=zFor(conf);
+
+  $('s-conf-v').textContent=conf+'%';
+  $('s-moe-v').textContent='±'+num(S.moe,5).toFixed(1)+'%';
+  $('s-p-v').textContent=num(S.p,50)+'%';
+  $('s-resp-v').textContent=num(S.resp,25)+'%';
+
+  var n0=(z*z*p*(1-p))/(e*e);
+  var n=Math.ceil(n0/(1+(n0-1)/N));
+  n=Math.min(n,Math.ceil(N));
+
+  $('s-out').textContent=commas(n);
+  $('s-z').textContent=z.toFixed(3);
+  $('s-invites').textContent=commas(Math.ceil(n/rr));
+  $('s-cap').textContent='completed responses give you ±'+num(S.moe,5).toFixed(1)+
+    '% at '+conf+'% confidence, from a population of '+commas(N)+'.';
+  drawCurve($('s-viz'), z, 'true value');
+}
+
+/* ===================== 2. MARGIN OF ERROR ===================== */
+var M={n:$('m-n'),pop:$('m-pop'),conf:$('m-conf'),res:$('m-res')};
+function calcMoe(){
+  var n=Math.max(2,num(M.n,400)), N=Math.max(n,num(M.pop,250000)),
+      conf=num(M.conf,95), r=num(M.res,62)/100, z=zFor(conf);
+
+  $('m-conf-v').textContent=conf+'%';
+  $('m-res-v').textContent=num(M.res,62)+'%';
+
+  var fpc = N>1 ? Math.sqrt((N-n)/(N-1)) : 0;
+  var e = z*Math.sqrt(r*(1-r)/n)*fpc*100;
+  var lo=Math.max(0,r*100-e), hi=Math.min(100,r*100+e);
+
+  $('m-out').textContent='±'+e.toFixed(1)+'%';
+  $('m-lo').textContent=lo.toFixed(1)+'%';
+  $('m-hi').textContent=hi.toFixed(1)+'%';
+  $('m-cap').textContent='With '+commas(n)+' responses you can report the true figure as somewhere between '+
+    lo.toFixed(1)+'% and '+hi.toFixed(1)+'%, '+conf+' times out of 100.';
+
+  // interval bar
+  var el=$('m-viz'); clear(el);
+  var W=560,H=190, y=92, L=40, R=W-40, sc=function(pct){ return L+(pct/100)*(R-L); };
+  el.appendChild(svg('line',{x1:L,y1:y,x2:R,y2:y,stroke:'#C6CABB','stroke-width':'2'}));
+  for(var t=0;t<=100;t+=25){
+    el.appendChild(svg('line',{x1:sc(t),y1:y-5,x2:sc(t),y2:y+5,stroke:'#C6CABB','stroke-width':'1'}));
+    el.appendChild(txt(sc(t),y+24,t+'%','middle'));
+  }
+  el.appendChild(svg('rect',{x:sc(lo),y:y-26,width:Math.max(2,sc(hi)-sc(lo)),height:52,fill:'#14655B','fill-opacity':'0.18'}));
+  [lo,hi].forEach(function(v){
+    el.appendChild(svg('line',{x1:sc(v),y1:y-26,x2:sc(v),y2:y+26,stroke:'#14655B','stroke-width':'2'}));
+  });
+  el.appendChild(svg('circle',{cx:sc(r*100),cy:y,r:6,fill:'#17212B'}));
+  el.appendChild(txt(sc(r*100),y-38,(r*100).toFixed(0)+'% reported','middle','600','#17212B'));
+  el.appendChild(txt(sc(lo),y+44,lo.toFixed(1)+'%','middle','500','#14655B'));
+  el.appendChild(txt(sc(hi),y+44,hi.toFixed(1)+'%','middle','500','#14655B'));
+}
+
+/* ===================== 3. MARKET SIZING ===================== */
+var K={u:$('k-units'),arpu:$('k-arpu'),cur:$('k-cur'),sam:$('k-sam'),som:$('k-som')};
+function calcMarket(){
+  var u=Math.max(0,num(K.u,180000)), arpu=Math.max(0,num(K.arpu,2400)),
+      cur=K.cur.value, sam=num(K.sam,18)/100, som=num(K.som,6)/100;
+
+  $('k-sam-v').textContent=num(K.sam,18)+'%';
+  $('k-som-v').textContent=num(K.som,6).toFixed(1)+'%';
+
+  var TAM=u*arpu, SAM=TAM*sam, SOM=SAM*som;
+  var buyers=u*sam*som;
+
+  $('k-out').textContent=money(SOM,cur);
+  $('k-buyers').textContent=commas(buyers);
+  $('k-month').textContent=commas(buyers/36);
+
+  var el=$('k-viz'); clear(el);
+  var W=560, L=8, R=W-8, full=R-L;
+  var rows=[
+    {k:'TAM',v:TAM,w:1,c:'#17212B',o:0.10,note:'everyone in the category'},
+    {k:'SAM',v:SAM,w:Math.max(0.012,sam),c:'#14655B',o:0.32,note:'you could serve today'},
+    {k:'SOM',v:SOM,w:Math.max(0.008,sam*som),c:'#B8830F',o:0.85,note:'you could realistically win'}
+  ];
+  rows.forEach(function(r,i){
+    var y=10+i*66, h=44, w=Math.max(6,full*r.w);
+    el.appendChild(svg('rect',{x:L,y:y,width:w,height:h,fill:r.c,'fill-opacity':r.o}));
+    el.appendChild(svg('rect',{x:L,y:y,width:w,height:h,fill:'none',stroke:r.c,'stroke-width':'1.3'}));
+    var lab=txt(L+11,y+27,r.k+'  '+money(r.v,cur),'start','600','#17212B');
+    lab.setAttribute('font-size','14.5');
+    if(w<190){ lab.setAttribute('x',L+w+11); }
+    el.appendChild(lab);
+    el.appendChild(txt(R,y+h+15,r.note,'end'));
+  });
+}
+
+/* ===================== 4. SIGNIFICANCE ===================== */
+var G={n1:$('g-n1'),x1:$('g-x1'),n2:$('g-n2'),x2:$('g-x2'),conf:$('g-conf')};
+function calcSig(){
+  var n1=Math.max(1,num(G.n1,480)), n2=Math.max(1,num(G.n2,495)),
+      x1=Math.min(Math.max(0,num(G.x1,192)),n1),
+      x2=Math.min(Math.max(0,num(G.x2,228)),n2),
+      conf=num(G.conf,95);
+
+  $('g-conf-v').textContent=conf+'%';
+
+  var p1=x1/n1, p2=x2/n2, pool=(x1+x2)/(n1+n2),
+      se=Math.sqrt(pool*(1-pool)*(1/n1+1/n2)),
+      z = se>0 ? (p2-p1)/se : 0,
+      pv = 2*(1-normCdf(Math.abs(z))),
+      alpha=1-conf/100,
+      sig = pv<alpha;
+
+  $('g-out').textContent = pv<0.001 ? 'p < 0.001' : 'p = '+pv.toFixed(3);
+  $('g-z').textContent=z.toFixed(2);
+  $('g-diff').textContent=((p2-p1)*100>=0?'+':'')+((p2-p1)*100).toFixed(1)+' pts';
+  $('g-fig').className='figure '+(sig?'pos':'neg');
+  $('g-cap').textContent = sig
+    ? 'The gap between the two groups is larger than chance would usually produce at '+conf+'% confidence. Treat it as a real difference, then ask whether it is big enough to act on.'
+    : 'At '+conf+'% confidence this gap is within what random variation produces. Reporting it as a finding would be overclaiming. More responses would narrow the bars.';
+
+  // two bars with CI whiskers
+  var el=$('g-viz'); clear(el);
+  var W=560, L=64, R=W-24, zc=zFor(conf);
+  var maxP=Math.max(p1,p2)+zc*Math.sqrt(0.25/Math.min(n1,n2));
+  var top=Math.min(1,Math.max(0.12,maxP*1.25));
+  var sc=function(p){ return L+(p/top)*(R-L); };
+
+  [{p:p1,n:n1,lab:'Group A',y:36},{p:p2,n:n2,lab:'Group B',y:104}].forEach(function(g){
+    var ci=zc*Math.sqrt(g.p*(1-g.p)/g.n);
+    var a=Math.max(0,g.p-ci), b=Math.min(1,g.p+ci);
+    el.appendChild(svg('rect',{x:L,y:g.y-13,width:Math.max(1,sc(g.p)-L),height:26,fill:'#14655B','fill-opacity':sig?0.55:0.28}));
+    el.appendChild(svg('line',{x1:sc(a),y1:g.y,x2:sc(b),y2:g.y,stroke:'#17212B','stroke-width':'1.6'}));
+    el.appendChild(svg('line',{x1:sc(a),y1:g.y-9,x2:sc(a),y2:g.y+9,stroke:'#17212B','stroke-width':'1.6'}));
+    el.appendChild(svg('line',{x1:sc(b),y1:g.y-9,x2:sc(b),y2:g.y+9,stroke:'#17212B','stroke-width':'1.6'}));
+    el.appendChild(txt(L-10,g.y+4,g.lab,'end','600','#17212B'));
+    var val=txt(sc(b)+9,g.y+4,(g.p*100).toFixed(1)+'%','start','600','#14655B');
+    el.appendChild(val);
+  });
+  el.appendChild(svg('line',{x1:L,y1:14,x2:L,y2:152,stroke:'#C6CABB','stroke-width':'1'}));
+  el.appendChild(txt(L,168,'0%','middle'));
+  el.appendChild(txt(R,168,(top*100).toFixed(0)+'%','middle'));
+  el.appendChild(txt((L+R)/2,168,'bars show '+conf+'% confidence intervals','middle'));
+}
+
+/* ---------- wiring ---------- */
+function bind(obj,fn){
+  for(var k in obj){
+    obj[k].addEventListener('input',fn);
+    obj[k].addEventListener('change',fn);
+  }
+}
+bind(S,calcSize); bind(M,calcMoe); bind(K,calcMarket); bind(G,calcSig);
+
+var tabs=[].slice.call(document.querySelectorAll('.picker button'));
+tabs.forEach(function(tab,i){
+  tab.addEventListener('click',function(){
+    tabs.forEach(function(t){
+      var panel=document.getElementById(t.getAttribute('aria-controls'));
+      var on = t===tab;
+      t.setAttribute('aria-selected',on?'true':'false');
+      panel.hidden=!on;
+    });
+  });
+  tab.addEventListener('keydown',function(e){
+    var d = e.key==='ArrowRight'?1 : e.key==='ArrowLeft'?-1 : 0;
+    if(!d) return;
+    e.preventDefault();
+    var next=tabs[(i+d+tabs.length)%tabs.length];
+    next.focus(); next.click();
+  });
+});
+
+calcSize(); calcMoe(); calcMarket(); calcSig();
+})();
+</script>
+</body>
+</html>
